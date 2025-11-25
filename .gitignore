@@ -1,0 +1,12 @@
+.env
+.venv/
+.venv_linux/
+.venv_linux_backup/
+__pycache__/
+*.pyc
+data/rag_storage/
+data/metadata/
+frontend/legacy-react/node_modules/
+frontend/legacy-react/dist/
+data_test/*.pdf
+data_test/*.txt
