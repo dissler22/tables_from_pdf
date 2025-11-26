@@ -1,0 +1,682 @@
+{
+  "pdf_path": "tests\\data_test\\pdf_tables\\test1.pdf",
+  "total_pages": 1,
+  "total_tables": 1,
+  "tables": [
+    {
+      "page_number": 0,
+      "table_index": 0,
+      "bbox": {
+        "x1": 64,
+        "y1": 263,
+        "x2": 1588,
+        "y2": 2291,
+        "confidence": 1.0,
+        "label": "table"
+      },
+      "num_rows": 8,
+      "num_cols": 10,
+      "cells": [
+        {
+          "row": 0,
+          "col": 0,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "MARCHE N° 20-915T\nAUTOROUTE A57 ELARGISSEMENT A 2x3 VOIES\nSECTION BENOIT MALON / PIERRE RONDE"
+        },
+        {
+          "row": 0,
+          "col": 1,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "MARCHE N° 20-915T\nAUTOROUTE A57 ELARGISSEMENT A 2x3 VOIES\nSECTION BENOIT MALON / PIERRE RONDE"
+        },
+        {
+          "row": 0,
+          "col": 2,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "MARCHE N° 20-915T\nAUTOROUTE A57 ELARGISSEMENT A 2x3 VOIES\nSECTION BENOIT MALON / PIERRE RONDE"
+        },
+        {
+          "row": 0,
+          "col": 3,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "MARCHE N° 20-915T\nAUTOROUTE A57 ELARGISSEMENT A 2x3 VOIES\nSECTION BENOIT MALON / PIERRE RONDE"
+        },
+        {
+          "row": 0,
+          "col": 4,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "MARCHE N° 20-915T\nAUTOROUTE A57 ELARGISSEMENT A 2x3 VOIES\nSECTION BENOIT MALON / PIERRE RONDE"
+        },
+        {
+          "row": 0,
+          "col": 5,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "MARCHE N° 20-915T\nAUTOROUTE A57 ELARGISSEMENT A 2x3 VOIES\nSECTION BENOIT MALON / PIERRE RONDE"
+        },
+        {
+          "row": 0,
+          "col": 6,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "MARCHE N° 20-915T\nAUTOROUTE A57 ELARGISSEMENT A 2x3 VOIES\nSECTION BENOIT MALON / PIERRE RONDE"
+        },
+        {
+          "row": 0,
+          "col": 7,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "MARCHE N° 20-915T\nAUTOROUTE A57 ELARGISSEMENT A 2x3 VOIES\nSECTION BENOIT MALON / PIERRE RONDE"
+        },
+        {
+          "row": 0,
+          "col": 8,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "MARCHE N° 20-915T\nAUTOROUTE A57 ELARGISSEMENT A 2x3 VOIES\nSECTION BENOIT MALON / PIERRE RONDE"
+        },
+        {
+          "row": 0,
+          "col": 9,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "MARCHE N° 20-915T\nAUTOROUTE A57 ELARGISSEMENT A 2x3 VOIES\nSECTION BENOIT MALON / PIERRE RONDE"
+        },
+        {
+          "row": 1,
+          "col": 0,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "EMETTEUR DU DOCUMENT : GROUPEMENT NGE ‐ MANDATAIRE GUINTOLI"
+        },
+        {
+          "row": 1,
+          "col": 1,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "EMETTEUR DU DOCUMENT : GROUPEMENT NGE ‐ MANDATAIRE GUINTOLI"
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "EMETTEUR DU DOCUMENT : GROUPEMENT NGE ‐ MANDATAIRE GUINTOLI"
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "EMETTEUR DU DOCUMENT : GROUPEMENT NGE ‐ MANDATAIRE GUINTOLI"
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "EMETTEUR DU DOCUMENT : GROUPEMENT NGE ‐ MANDATAIRE GUINTOLI"
+        },
+        {
+          "row": 1,
+          "col": 5,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "EMETTEUR DU DOCUMENT : GROUPEMENT NGE ‐ MANDATAIRE GUINTOLI"
+        },
+        {
+          "row": 1,
+          "col": 6,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "EMETTEUR DU DOCUMENT : GROUPEMENT NGE ‐ MANDATAIRE GUINTOLI"
+        },
+        {
+          "row": 1,
+          "col": 7,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "EMETTEUR DU DOCUMENT : GROUPEMENT NGE ‐ MANDATAIRE GUINTOLI"
+        },
+        {
+          "row": 1,
+          "col": 8,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "EMETTEUR DU DOCUMENT : GROUPEMENT NGE ‐ MANDATAIRE GUINTOLI"
+        },
+        {
+          "row": 1,
+          "col": 9,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "EMETTEUR DU DOCUMENT : GROUPEMENT NGE ‐ MANDATAIRE GUINTOLI"
+        },
+        {
+          "row": 2,
+          "col": 0,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "Journaux de chantier"
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "Journaux de chantier"
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "Journaux de chantier"
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "Journaux de chantier"
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "Journaux de chantier"
+        },
+        {
+          "row": 2,
+          "col": 5,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "Journaux de chantier"
+        },
+        {
+          "row": 2,
+          "col": 6,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "Journaux de chantier"
+        },
+        {
+          "row": 2,
+          "col": 7,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "Journaux de chantier"
+        },
+        {
+          "row": 2,
+          "col": 8,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "Journaux de chantier"
+        },
+        {
+          "row": 2,
+          "col": 9,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "Journaux de chantier"
+        },
+        {
+          "row": 3,
+          "col": 0,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "2023 Semaine 01"
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "2023 Semaine 01"
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "2023 Semaine 01"
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "2023 Semaine 01"
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "2023 Semaine 01"
+        },
+        {
+          "row": 3,
+          "col": 5,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "2023 Semaine 01"
+        },
+        {
+          "row": 3,
+          "col": 6,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "2023 Semaine 01"
+        },
+        {
+          "row": 3,
+          "col": 7,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "2023 Semaine 01"
+        },
+        {
+          "row": 3,
+          "col": 8,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "2023 Semaine 01"
+        },
+        {
+          "row": 3,
+          "col": 9,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "2023 Semaine 01"
+        },
+        {
+          "row": 4,
+          "col": 0,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "Indice"
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "Date"
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "Modifications"
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "Modifications"
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "Rédacteur"
+        },
+        {
+          "row": 4,
+          "col": 5,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "Rédacteur"
+        },
+        {
+          "row": 4,
+          "col": 6,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "Vérificateur"
+        },
+        {
+          "row": 4,
+          "col": 7,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "Vérificateur"
+        },
+        {
+          "row": 4,
+          "col": 8,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "Approbateur"
+        },
+        {
+          "row": 4,
+          "col": 9,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "Approbateur"
+        },
+        {
+          "row": 5,
+          "col": 0,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "A"
+        },
+        {
+          "row": 5,
+          "col": 1,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "10/01/2023"
+        },
+        {
+          "row": 5,
+          "col": 2,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "Création du document"
+        },
+        {
+          "row": 5,
+          "col": 3,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "Création du document"
+        },
+        {
+          "row": 5,
+          "col": 4,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "L. DROUVIN"
+        },
+        {
+          "row": 5,
+          "col": 5,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "L. DROUVIN"
+        },
+        {
+          "row": 5,
+          "col": 6,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "L. DROUVIN"
+        },
+        {
+          "row": 5,
+          "col": 7,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "L. DROUVIN"
+        },
+        {
+          "row": 5,
+          "col": 8,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "T. DEVINS"
+        },
+        {
+          "row": 5,
+          "col": 9,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "T. DEVINS"
+        },
+        {
+          "row": 6,
+          "col": 0,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "SOCIETE"
+        },
+        {
+          "row": 6,
+          "col": 1,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "AXE"
+        },
+        {
+          "row": 6,
+          "col": 2,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "POINT DE\nREPERE"
+        },
+        {
+          "row": 6,
+          "col": 3,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "PHASE"
+        },
+        {
+          "row": 6,
+          "col": 4,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "DOMAINE"
+        },
+        {
+          "row": 6,
+          "col": 5,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "NOM\nD'OUVRAGE"
+        },
+        {
+          "row": 6,
+          "col": 6,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "SENS"
+        },
+        {
+          "row": 6,
+          "col": 7,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "DOCUMENT"
+        },
+        {
+          "row": 6,
+          "col": 8,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "NUMERO\nD'ORDRE"
+        },
+        {
+          "row": 6,
+          "col": 9,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "13/01/2023\nINDICE"
+        },
+        {
+          "row": 7,
+          "col": 0,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "ESC"
+        },
+        {
+          "row": 7,
+          "col": 1,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "A57"
+        },
+        {
+          "row": 7,
+          "col": 2,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "000675"
+        },
+        {
+          "row": 7,
+          "col": 3,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "EXE"
+        },
+        {
+          "row": 7,
+          "col": 4,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "GEN"
+        },
+        {
+          "row": 7,
+          "col": 5,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "0‐0000"
+        },
+        {
+          "row": 7,
+          "col": 6,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "SS"
+        },
+        {
+          "row": 7,
+          "col": 7,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "JDC"
+        },
+        {
+          "row": 7,
+          "col": 8,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "5108"
+        },
+        {
+          "row": 7,
+          "col": 9,
+          "row_span": 1,
+          "col_span": 1,
+          "content": "A"
+        }
+      ],
+      "raw_data": [
+        [
+          "MARCHE N° 20-915T\nAUTOROUTE A57 ELARGISSEMENT A 2x3 VOIES\nSECTION BENOIT MALON / PIERRE RONDE",
+          "MARCHE N° 20-915T\nAUTOROUTE A57 ELARGISSEMENT A 2x3 VOIES\nSECTION BENOIT MALON / PIERRE RONDE",
+          "MARCHE N° 20-915T\nAUTOROUTE A57 ELARGISSEMENT A 2x3 VOIES\nSECTION BENOIT MALON / PIERRE RONDE",
+          "MARCHE N° 20-915T\nAUTOROUTE A57 ELARGISSEMENT A 2x3 VOIES\nSECTION BENOIT MALON / PIERRE RONDE",
+          "MARCHE N° 20-915T\nAUTOROUTE A57 ELARGISSEMENT A 2x3 VOIES\nSECTION BENOIT MALON / PIERRE RONDE",
+          "MARCHE N° 20-915T\nAUTOROUTE A57 ELARGISSEMENT A 2x3 VOIES\nSECTION BENOIT MALON / PIERRE RONDE",
+          "MARCHE N° 20-915T\nAUTOROUTE A57 ELARGISSEMENT A 2x3 VOIES\nSECTION BENOIT MALON / PIERRE RONDE",
+          "MARCHE N° 20-915T\nAUTOROUTE A57 ELARGISSEMENT A 2x3 VOIES\nSECTION BENOIT MALON / PIERRE RONDE",
+          "MARCHE N° 20-915T\nAUTOROUTE A57 ELARGISSEMENT A 2x3 VOIES\nSECTION BENOIT MALON / PIERRE RONDE",
+          "MARCHE N° 20-915T\nAUTOROUTE A57 ELARGISSEMENT A 2x3 VOIES\nSECTION BENOIT MALON / PIERRE RONDE"
+        ],
+        [
+          "EMETTEUR DU DOCUMENT : GROUPEMENT NGE ‐ MANDATAIRE GUINTOLI",
+          "EMETTEUR DU DOCUMENT : GROUPEMENT NGE ‐ MANDATAIRE GUINTOLI",
+          "EMETTEUR DU DOCUMENT : GROUPEMENT NGE ‐ MANDATAIRE GUINTOLI",
+          "EMETTEUR DU DOCUMENT : GROUPEMENT NGE ‐ MANDATAIRE GUINTOLI",
+          "EMETTEUR DU DOCUMENT : GROUPEMENT NGE ‐ MANDATAIRE GUINTOLI",
+          "EMETTEUR DU DOCUMENT : GROUPEMENT NGE ‐ MANDATAIRE GUINTOLI",
+          "EMETTEUR DU DOCUMENT : GROUPEMENT NGE ‐ MANDATAIRE GUINTOLI",
+          "EMETTEUR DU DOCUMENT : GROUPEMENT NGE ‐ MANDATAIRE GUINTOLI",
+          "EMETTEUR DU DOCUMENT : GROUPEMENT NGE ‐ MANDATAIRE GUINTOLI",
+          "EMETTEUR DU DOCUMENT : GROUPEMENT NGE ‐ MANDATAIRE GUINTOLI"
+        ],
+        [
+          "Journaux de chantier",
+          "Journaux de chantier",
+          "Journaux de chantier",
+          "Journaux de chantier",
+          "Journaux de chantier",
+          "Journaux de chantier",
+          "Journaux de chantier",
+          "Journaux de chantier",
+          "Journaux de chantier",
+          "Journaux de chantier"
+        ],
+        [
+          "2023 Semaine 01",
+          "2023 Semaine 01",
+          "2023 Semaine 01",
+          "2023 Semaine 01",
+          "2023 Semaine 01",
+          "2023 Semaine 01",
+          "2023 Semaine 01",
+          "2023 Semaine 01",
+          "2023 Semaine 01",
+          "2023 Semaine 01"
+        ],
+        [
+          "Indice",
+          "Date",
+          "Modifications",
+          "Modifications",
+          "Rédacteur",
+          "Rédacteur",
+          "Vérificateur",
+          "Vérificateur",
+          "Approbateur",
+          "Approbateur"
+        ],
+        [
+          "A",
+          "10/01/2023",
+          "Création du document",
+          "Création du document",
+          "L. DROUVIN",
+          "L. DROUVIN",
+          "L. DROUVIN",
+          "L. DROUVIN",
+          "T. DEVINS",
+          "T. DEVINS"
+        ],
+        [
+          "SOCIETE",
+          "AXE",
+          "POINT DE\nREPERE",
+          "PHASE",
+          "DOMAINE",
+          "NOM\nD'OUVRAGE",
+          "SENS",
+          "DOCUMENT",
+          "NUMERO\nD'ORDRE",
+          "13/01/2023\nINDICE"
+        ],
+        [
+          "ESC",
+          "A57",
+          "000675",
+          "EXE",
+          "GEN",
+          "0‐0000",
+          "SS",
+          "JDC",
+          "5108",
+          "A"
+        ]
+      ]
+    }
+  ],
+  "errors": []
+}
