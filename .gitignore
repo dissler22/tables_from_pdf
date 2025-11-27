@@ -1,12 +1,47 @@
+# Environnements virtuels
 .env
 .venv/
+.venv_win/
 .venv_linux/
 .venv_linux_backup/
+
+# Python
 __pycache__/
 *.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Data
 data/rag_storage/
 data/metadata/
-frontend/legacy-react/node_modules/
-frontend/legacy-react/dist/
+data/output/
+data/upload/*.pdf
+
+# Tests temporaires
 data_test/*.pdf
 data_test/*.txt
+tests/data_test/pdf_tables/*.pdf
+
+# Frontend
+frontend/legacy-react/node_modules/
+frontend/legacy-react/dist/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Modèles ML (trop lourds)
+*.pt
+*.pth
+*.onnx

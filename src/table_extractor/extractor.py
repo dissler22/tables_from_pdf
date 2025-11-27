@@ -1,8 +1,9 @@
 """
-Module d'extraction de structure de tableaux utilisant img2table
+Module d'extraction de structure de tableaux
 
-Ce module utilise img2table pour extraire la structure et le contenu
-des tableaux à partir d'images.
+Ce module supporte plusieurs backends :
+- img2table (si disponible)
+- pdfplumber (fallback pour PDFs natifs)
 """
 
 from typing import List, Optional, Union, Tuple
@@ -12,6 +13,19 @@ import tempfile
 import os
 
 from .utils import BoundingBox, TableCell, ExtractedTable
+
+# Vérifier la disponibilité des backends
+try:
+    import img2table
+    HAS_IMG2TABLE = True
+except ImportError:
+    HAS_IMG2TABLE = False
+
+try:
+    import pdfplumber
+    HAS_PDFPLUMBER = True
+except ImportError:
+    HAS_PDFPLUMBER = False
 
 
 class TableStructureExtractor:
@@ -81,6 +95,21 @@ class TableStructureExtractor:
         Returns:
             Liste de ExtractedTable
         """
+        if not HAS_IMG2TABLE:
+            # Fallback: retourner une table vide avec le bbox
+            # L'extraction réelle se fera via pdfplumber sur le PDF
+            if bbox:
+                return [ExtractedTable(
+                    page_number=page_number,
+                    table_index=0,
+                    bbox=bbox,
+                    cells=[],
+                    num_rows=0,
+                    num_cols=0,
+                    raw_data=[]
+                )]
+            return []
+        
         from img2table.document import Image as Img2TableImage
         
         # Sauvegarder temporairement l'image

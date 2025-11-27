@@ -215,7 +215,7 @@ class TableExtractionPipeline:
             
             try:
                 if self.config.mode == ExtractionMode.ACCURATE:
-                    tables = self._extract_page_accurate(image, page_num)
+                    tables = self._extract_page_accurate(image, page_num, pdf_path)
                 else:  # HYBRID
                     tables = self.hybrid.extract_from_image(image, page_num)
                 
@@ -227,41 +227,236 @@ class TableExtractionPipeline:
                 result.errors.append(error_msg)
                 print(f"[X] {error_msg}")
         
+        # Fusionner les tableaux multi-pages
+        if len(result.tables) > 1:
+            from .postprocess import merge_multipage_tables
+            original_count = len(result.tables)
+            result.tables = merge_multipage_tables(result.tables)
+            if len(result.tables) < original_count:
+                merged = original_count - len(result.tables)
+                print(f"   [FUSION] {merged} tableau(x) fusionné(s) (multi-pages)")
+        
         return result
     
     def _extract_page_accurate(
         self,
         image,
         page_number: int,
+        pdf_path: Optional[Path] = None,
     ) -> List[ExtractedTable]:
-        """Extraction précise d'une page"""
+        """
+        Extraction précise d'une page.
+        
+        Stratégie:
+        1. Si PDF natif disponible → utiliser pdfplumber directement (plus fiable)
+        2. Sinon → DETR + guidage visuel + img2table
+        """
         from .utils import crop_image
         
-        # Étape 1: Détecter les tableaux
+        # Stratégie 1: PDF natif avec pdfplumber (plus fiable pour texte extractible)
+        try:
+            import pdfplumber
+            if pdf_path and pdf_path.exists():
+                tables = self._extract_with_pdfplumber_direct(pdf_path, page_number)
+                if tables:
+                    print(f"[PDFPLUMBER] {len(tables)} tableau(x)")
+                    return tables
+        except ImportError:
+            pass
+        except Exception as e:
+            print(f"      [PDFPLUMBER] Échec: {e}")
+        
+        # Stratégie 2: DETR + guidage visuel
         detections = self.detector.detect(image)
         
+        try:
+            from .visual_guide import VisualGuide
+            guide = VisualGuide()
+            visual_regions = guide.analyze_page(image)
+            
+            if visual_regions:
+                detections = guide.merge_bboxes(detections, visual_regions)
+                print(f"      [VISUAL] {len(visual_regions)} région(s)")
+        except Exception as e:
+            print(f"      [VISUAL] Échec: {e}")
+        
         if not detections:
-            # Essayer img2table sur la page entière
             return self.extractor.extract_from_image(image, page_number)
         
-        # Étape 2: Extraire chaque tableau
+        # Fallback: img2table sur les images croppées
         tables = []
         for idx, bbox in enumerate(detections):
-            # Découper la région
             cropped = crop_image(image, bbox, padding=10)
-            
-            # Extraire avec img2table
             extracted = self.extractor.extract_from_image(
                 cropped,
                 page_number=page_number,
                 bbox=bbox
             )
-            
             for table in extracted:
                 table.table_index = len(tables)
                 tables.append(table)
         
         return tables
+    
+    def _extract_with_pdfplumber_direct(
+        self,
+        pdf_path: Path,
+        page_number: int,
+    ) -> List[ExtractedTable]:
+        """
+        Extraction directe avec pdfplumber (sans passer par DETR).
+        
+        Plus fiable pour les PDFs natifs avec texte extractible.
+        """
+        import pdfplumber
+        from .utils import BoundingBox, TableCell
+        from .postprocess import apply_postprocessing
+        
+        tables = []
+        
+        with pdfplumber.open(pdf_path) as pdf:
+            if page_number >= len(pdf.pages):
+                return []
+            
+            page = pdf.pages[page_number]
+            pdf_tables = page.find_tables()
+            
+            for idx, pdf_table in enumerate(pdf_tables):
+                raw_data = pdf_table.extract()
+                if not raw_data:
+                    continue
+                
+                # Nettoyer les None
+                raw_data = [[cell if cell else "" for cell in row] for row in raw_data]
+                
+                # Filtrer les petites tables (moins de 3 lignes ou 3 colonnes)
+                if len(raw_data) < 3 or len(raw_data[0]) < 3:
+                    continue
+                
+                bbox = BoundingBox(
+                    x1=pdf_table.bbox[0],
+                    y1=pdf_table.bbox[1],
+                    x2=pdf_table.bbox[2],
+                    y2=pdf_table.bbox[3],
+                    confidence=1.0,
+                    label="table"
+                )
+                
+                cells = []
+                for row_idx, row in enumerate(raw_data):
+                    for col_idx, content in enumerate(row):
+                        cells.append(TableCell(
+                            row=row_idx,
+                            col=col_idx,
+                            content=content,
+                        ))
+                
+                extracted = ExtractedTable(
+                    page_number=page_number,
+                    table_index=len(tables),
+                    bbox=bbox,
+                    cells=cells,
+                    num_rows=len(raw_data),
+                    num_cols=len(raw_data[0]) if raw_data else 0,
+                    raw_data=raw_data,
+                )
+                
+                # Appliquer le post-traitement
+                extracted = apply_postprocessing(extracted)
+                tables.append(extracted)
+        
+        return tables
+    
+    def _extract_with_pdfplumber(
+        self,
+        pdf_path: Path,
+        page_number: int,
+        bboxes: List,
+    ) -> List[ExtractedTable]:
+        """Extrait le contenu des tableaux avec pdfplumber + post-traitement."""
+        import pdfplumber
+        from .utils import BoundingBox, TableCell
+        from .postprocess import apply_postprocessing
+        
+        tables = []
+        
+        with pdfplumber.open(pdf_path) as pdf:
+            if page_number >= len(pdf.pages):
+                return []
+            
+            page = pdf.pages[page_number]
+            pdf_tables = page.find_tables()
+            
+            # Pour chaque bbox détectée, trouver la table pdfplumber correspondante
+            for bbox_idx, bbox in enumerate(bboxes):
+                # Convertir les coordonnées (image DPI -> PDF points)
+                # Ratio approximatif : image_coord / dpi * 72
+                scale = 72.0 / self.config.dpi
+                pdf_bbox = (
+                    bbox.x1 * scale,
+                    bbox.y1 * scale,
+                    bbox.x2 * scale,
+                    bbox.y2 * scale,
+                )
+                
+                # Trouver la meilleure table pdfplumber qui correspond
+                best_table = None
+                best_overlap = 0
+                
+                for pdf_table in pdf_tables:
+                    overlap = self._compute_overlap(pdf_bbox, pdf_table.bbox)
+                    if overlap > best_overlap:
+                        best_overlap = overlap
+                        best_table = pdf_table
+                
+                if best_table and best_overlap > 0.3:
+                    raw_data = best_table.extract()
+                    # Nettoyer les None
+                    raw_data = [[cell if cell else "" for cell in row] for row in raw_data]
+                    
+                    cells = []
+                    for row_idx, row in enumerate(raw_data):
+                        for col_idx, content in enumerate(row):
+                            cells.append(TableCell(
+                                row=row_idx,
+                                col=col_idx,
+                                content=content,
+                            ))
+                    
+                    extracted = ExtractedTable(
+                        page_number=page_number,
+                        table_index=len(tables),
+                        bbox=bbox,
+                        cells=cells,
+                        num_rows=len(raw_data),
+                        num_cols=len(raw_data[0]) if raw_data else 0,
+                        raw_data=raw_data,
+                    )
+                    
+                    # Appliquer le post-traitement
+                    extracted = apply_postprocessing(extracted)
+                    tables.append(extracted)
+        
+        return tables
+    
+    @staticmethod
+    def _compute_overlap(bbox1: tuple, bbox2: tuple) -> float:
+        """Calcule le ratio de chevauchement entre deux bboxes."""
+        x1 = max(bbox1[0], bbox2[0])
+        y1 = max(bbox1[1], bbox2[1])
+        x2 = min(bbox1[2], bbox2[2])
+        y2 = min(bbox1[3], bbox2[3])
+        
+        if x2 < x1 or y2 < y1:
+            return 0.0
+        
+        intersection = (x2 - x1) * (y2 - y1)
+        area1 = (bbox1[2] - bbox1[0]) * (bbox1[3] - bbox1[1])
+        area2 = (bbox2[2] - bbox2[0]) * (bbox2[3] - bbox2[1])
+        
+        # Ratio par rapport à la plus petite bbox
+        min_area = min(area1, area2)
+        return intersection / min_area if min_area > 0 else 0.0
     
     def _save_results(
         self,

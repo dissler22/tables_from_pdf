@@ -17,7 +17,8 @@ Passer d'une heuristique spécifique à `test1.pdf` à une extraction plus gén�
 
 ## Tests
 - Réutilise le test T1 (v0) : `PYTHONPATH=. .venv_linux/bin/python3 -m pytest tests/test_extract_test1.py` — doit rester ✅.
-- À ajouter (prochain incrément) : goldens pour au moins une page de `data/upload/ESC_A57_000675_EXE_GEN_0-0000_SS_JDC_5108_A_Journaux_de_chantier_2023_S01.pdf` et `data/upload/SDP Série D Ind A.pdf`.
+- Régression ajoutée pour la page 2 (index 1) du PDF journaux de chantier : `tests/test_extract_esc_page2.py` utilise un golden JSON `tests/goldens/esc_page2_table0.json` (table consolidée, sauts de ligne internes préservés).
+- À ajouter (prochain incrément) : goldens supplémentaires pour d'autres pages de `data/upload/ESC_A57_000675_EXE_GEN_0-0000_SS_JDC_5108_A_Journaux_de_chantier_2023_S01.pdf` et `data/upload/SDP Série D Ind A.pdf`.
 
 ## Pré-requis
 - Python 3.12, venv `.venv_linux`.

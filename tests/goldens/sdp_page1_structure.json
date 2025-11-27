@@ -1,0 +1,90 @@
+{
+  "description": "Structure d'une page SDP (Sous-Détail de Prix)",
+  "sections": [
+    {
+      "name": "header",
+      "description": "En-têtes du tableau principal (toujours identiques)",
+      "columns": [
+        "COMPOSANTES DU PRIX (avec décomposition par sous détails élémentaires)",
+        "Unité",
+        "Quantité",
+        "Durée d'utilisation",
+        "TOTAL",
+        "Main d'oeuvre / coût à l'unité",
+        "Matériels et matières consommables / prix unitaire",
+        "Prestations / prix unitaire",
+        "MONTANT PART PROPRE",
+        "PART SOUS TRAITES FOURNITURES / prix unitaire + MONTANT",
+        "TOTAL GENERAL"
+      ]
+    },
+    {
+      "name": "formula_row",
+      "description": "Ligne de formules (toujours présente)",
+      "values": ["", "", "a", "b", "1=axb", "2", "3", "4", "5=1x(2+3+4)", "6", "7=1x6", "8=5+7"]
+    },
+    {
+      "name": "data_rows",
+      "description": "Corps du tableau avec 3 types de lignes selon indentation",
+      "row_types": [
+        {
+          "type": "detail",
+          "indent": "high",
+          "background": "white",
+          "text_color": "black",
+          "example": "Pelle sur pneus de 10 à 15 tonnes"
+        },
+        {
+          "type": "subtotal",
+          "indent": "medium",
+          "background": "light_gray",
+          "text_color": "blue",
+          "example": "Stockage PF TPM Sainte Musse"
+        },
+        {
+          "type": "total",
+          "indent": "none",
+          "background": "dark_gray",
+          "text_color": "black",
+          "example": "Décapage de 20cm et mise en dépôt dans les emprises"
+        }
+      ]
+    },
+    {
+      "name": "total_prix_secs",
+      "description": "Total du tableau principal",
+      "label": "TOTAL PRIX SECS"
+    },
+    {
+      "name": "recap_table",
+      "description": "Tableau récapitulatif (2 colonnes A et B)",
+      "columns_left": {
+        "title": "A : Travaux propres",
+        "rows": [
+          "TOTAL 5",
+          "K1 Frais de chantier, en % du total 5",
+          "K2 Frais proportionnels, en % du total 5",
+          "K3 Aléas-Bénéfice, en % du total 5",
+          "Total A"
+        ]
+      },
+      "columns_right": {
+        "title": "B : Travaux sous traités et fournitures",
+        "rows": [
+          "TOTAL 7",
+          "K4 Frais de chantier, en % du total 7",
+          "K5 Frais proportionnels, en % du total 7",
+          "K6 Aléas-Bénéfice, en % du total 7",
+          "Total B"
+        ]
+      }
+    },
+    {
+      "name": "conclusion",
+      "description": "Prix final",
+      "label": "PRIX DE VENTE HORS TAXES ( (A) + (B) )",
+      "fields": ["montant", "arrondi"]
+    }
+  ]
+}
+
