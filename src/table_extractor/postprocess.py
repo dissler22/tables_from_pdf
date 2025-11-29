@@ -208,21 +208,65 @@ def _is_continuation_table(table: ExtractedTable) -> bool:
     """
     Détecte si un tableau est une continuation du précédent (pas d'en-têtes propres).
     
-    Critères:
-    1. La première ligne contient un header de page
-    2. Ou la première ligne est vide/avec juste "0"
+    Logique : on cherche si la première ligne contient des en-têtes de colonnes.
+    Si NON → c'est une continuation.
+    
+    En-têtes typiques ESC : jours de la semaine, "Personnel", "Effectif", etc.
     """
     if not table.raw_data:
         return False
     
     first_row = table.raw_data[0]
     
-    # Critère 1: Header de page dans la première ligne
+    # Critère 1: Header de page (cartouche long) → continuation
     if _is_page_header_row(first_row):
         return True
     
-    # Critère 2: Première cellule vide ou répétition d'en-tête incomplet
+    # Critère 2: Première cellule vide → continuation
     if not first_row[0] or first_row[0].strip() == "":
+        return True
+    
+    # Critère 3: Chercher des marqueurs d'en-têtes de colonnes
+    # Si on en trouve → ce n'est PAS une continuation
+    header_markers = [
+        "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche",
+        "personnel", "effectif", "observations", "date", "total",
+        "janvier", "février", "mars", "avril", "mai", "juin",
+        "juillet", "août", "septembre", "octobre", "novembre", "décembre",
+    ]
+    
+    row_text = " ".join(str(cell).lower() for cell in first_row if cell)
+    
+    # Si on trouve au moins 2 marqueurs d'en-têtes → c'est un vrai tableau avec en-têtes
+    markers_found = sum(1 for m in header_markers if m in row_text)
+    if markers_found >= 2:
+        return False  # Pas une continuation, a ses propres en-têtes
+    
+    # Critère 4: Si la première ligne contient des données numériques → continuation
+    # (les en-têtes sont rarement des nombres)
+    numeric_cells = sum(1 for cell in first_row if cell and _looks_like_data(cell))
+    if numeric_cells >= len(first_row) * 0.5:
+        return True  # Plus de la moitié des cellules sont des données → continuation
+    
+    return False
+
+
+def _looks_like_data(text: str) -> bool:
+    """Vérifie si un texte ressemble à une donnée (nombre, date, etc.)."""
+    if not text:
+        return False
+    text = text.strip()
+    
+    # Nombre (entier ou décimal)
+    if re.match(r'^[\d\s.,]+$', text):
+        return True
+    
+    # Date format JJ/MM ou JJ/MM/YYYY
+    if re.match(r'^\d{1,2}/\d{1,2}(/\d{2,4})?$', text):
+        return True
+    
+    # "N x Personnel" format
+    if re.match(r'^\d+\s*x\s+', text):
         return True
     
     return False
@@ -230,10 +274,13 @@ def _is_continuation_table(table: ExtractedTable) -> bool:
 
 def merge_multipage_tables(tables: List[ExtractedTable]) -> List[ExtractedTable]:
     """
-    Fusionne les tableaux qui s'étendent sur plusieurs pages.
+    Fusionne les tableaux qui s'étendent sur 2 pages (max).
     
-    Détecte automatiquement les continuations (pages sans en-têtes) et 
-    les fusionne avec le tableau précédent.
+    Logique : on part de la FIN de la liste.
+    Si un tableau n'a pas d'en-têtes reconnaissables, c'est une continuation
+    de la page précédente.
+    
+    Note: Un tableau ne fait JAMAIS plus de 2 pages.
     
     Args:
         tables: Liste des tableaux extraits (triés par page)
@@ -247,32 +294,36 @@ def merge_multipage_tables(tables: List[ExtractedTable]) -> List[ExtractedTable]
     # Trier par page puis par index de tableau
     sorted_tables = sorted(tables, key=lambda t: (t.page_number, t.table_index))
     
+    # Parcourir de la fin vers le début
     merged = []
-    current_table = None
+    skip_next = False
     
-    for table in sorted_tables:
-        if current_table is None:
-            current_table = table
+    for i in range(len(sorted_tables) - 1, -1, -1):
+        if skip_next:
+            skip_next = False
             continue
         
-        # Vérifier si ce tableau est une continuation
-        is_continuation = (
-            _is_continuation_table(table) and
-            table.num_cols == current_table.num_cols and
-            table.page_number == current_table.page_number + 1  # Page suivante
-        )
+        table = sorted_tables[i]
         
-        if is_continuation:
-            # Fusionner avec le tableau courant
-            current_table = _merge_two_tables(current_table, table)
-        else:
-            # Nouveau tableau, sauvegarder le précédent
-            merged.append(current_table)
-            current_table = table
-    
-    # Ajouter le dernier tableau
-    if current_table is not None:
-        merged.append(current_table)
+        # Vérifier si ce tableau n'a PAS d'en-têtes (= continuation)
+        if i > 0 and _is_continuation_table(table):
+            prev_table = sorted_tables[i - 1]
+            
+            # Vérifier que c'est bien la page suivante et même nombre de colonnes
+            is_valid_continuation = (
+                table.page_number == prev_table.page_number + 1 and
+                table.num_cols == prev_table.num_cols
+            )
+            
+            if is_valid_continuation:
+                # Fusionner: prev_table + table
+                fused = _merge_two_tables(prev_table, table)
+                merged.insert(0, fused)
+                skip_next = True  # Sauter prev_table car déjà fusionné
+                continue
+        
+        # Pas de fusion, garder le tableau tel quel
+        merged.insert(0, table)
     
     return merged
 

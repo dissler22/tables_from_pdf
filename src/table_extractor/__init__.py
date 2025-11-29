@@ -13,6 +13,8 @@ __version__ = "1.0.0"
 # Imports lazy pour éviter de charger torch au démarrage
 __all__ = [
     "TableExtractionPipeline",
+    "PipelineConfig",
+    "ExtractionMode",
     "TableDetector", 
     "TableStructureExtractor",
 ]
@@ -23,6 +25,12 @@ def __getattr__(name):
     if name == "TableExtractionPipeline":
         from .pipeline import TableExtractionPipeline
         return TableExtractionPipeline
+    if name == "PipelineConfig":
+        from .pipeline import PipelineConfig
+        return PipelineConfig
+    if name == "ExtractionMode":
+        from .pipeline import ExtractionMode
+        return ExtractionMode
     if name == "TableDetector":
         from .detector import TableDetector
         return TableDetector

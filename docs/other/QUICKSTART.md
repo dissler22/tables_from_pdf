@@ -1,85 +1,141 @@
-# 🚀 Guide de démarrage rapide
+# 🚀 Quick Start - Extracteur de tableaux PDF
 
-Ce guide explique comment exécuter l'extracteur GMFT en mode local (CLI + API Python). Aucun front n'est requis.
+## ⚡ Installation (Windows)
 
-> ℹ️ **Organisation**  
-> - Code backend : `backend/gmft_core/`  
-> - Artefacts : `data/` (`uploads`, `metadata`, `tables_store`, `layouts`)  
-> - PDFs d'exemple : `tests/data/pdf_tables/`
+```powershell
+# Créer l'environnement
+python -m venv .venv_win
+.\.venv_win\Scripts\Activate.ps1
 
-## 📋 Prérequis
-- Python 3.10+
-- GMFT (submodule git) et poids modèle (`GMFT_MODEL_PATH`)
-- Tesseract installé si vous traitez des scans (PaddleOCR optionnel)
-- Quelques PDF contenant des tableaux
+# Dépendances essentielles
+pip install pdfplumber pdf2image Pillow
 
-## ⚡ Installation
-```bash
-cd backend/gmft_core
-pip install -e .
-pip install -r requirements-ocr.txt  # si OCR nécessaire
-cd ../..
+# Optionnel (pour DETR / scans)
+pip install torch transformers opencv-python
 ```
 
-Créer `.env` à la racine :
-```bash
-GMFT_MODEL_PATH=./models/gmft_small.pt
-GMFT_CACHE_DIR=./.gmft_cache
-OCR_ENGINE=tesseract
-TESSDATA_PREFIX=/usr/share/tesseract-ocr/4.00/tessdata
-TABLES_STORE=./data/tables_store
-UPLOAD_DIR=./data/uploads
-PROFILE=default
+## 📋 Structure du projet
+
+```
+tables_from_pdf/
+├── src/table_extractor/      # Code source
+│   ├── pipeline.py           # Pipeline principal
+│   ├── extractor.py          # PdfPlumberExtractor
+│   ├── sdp_extractor.py      # Extracteur SDP
+│   └── postprocess.py        # Nettoyage
+├── data/
+│   ├── upload/               # PDFs à traiter
+│   └── output/               # Résultats
+└── tests/goldens/            # Fichiers de référence
 ```
 
-Optionnel : `data/profiles/default.yaml` pour définir vos colonnes (voir exemples dans `data/profiles/`).
+## 🎯 Extraction ESC (Journaux de chantier)
 
-## 🎯 Utilisation
-
-### 1. Ingestion via CLI
-```bash
-gmft-cli ingest --data tests/data/pdf_tables --profile default
-```
-Sortie typique :
-```
-RUN ID: run-20250217-1015-7b8c
-PDFs: 2 | Pages: 35 | Tables détectées: 9
-Exports: data/tables_store/run-20250217-1015-7b8c
-```
-
-### 2. Interroger les tables
-```bash
-gmft-cli query --folder "Direction Financière" --column "Montant" --confidence-min 0.7
-```
-
-### 3. Exporter un tableau
-```bash
-gmft-cli export --table-id tbl-0c89fe --format parquet --output ./exports
-```
-
-### 4. Utiliser l'API Python
 ```python
-from gmft_extractor import GMFTExtractor
+from pathlib import Path
+import sys
+sys.path.insert(0, 'src')
 
-extractor = GMFTExtractor(profile="default")
-result = extractor.process_pdf("tests/data/pdf_tables/bilan.pdf")
-for table in result.tables:
-    table.dataframe.to_parquet("./exports/%s.parquet" % table.table_id)
+from table_extractor import TableExtractionPipeline, PipelineConfig, ExtractionMode
+
+# Configuration
+config = PipelineConfig(
+    mode=ExtractionMode.ACCURATE,
+    pages=[1, 2, 3],  # Pages 2, 3, 4 (0-indexed)
+    output_format=["json", "csv"],
+)
+
+# Extraction
+pipeline = TableExtractionPipeline(config)
+result = pipeline.extract(
+    "data/upload/ESC_A57_000675_EXE_GEN_0-0000_SS_JDC_5108_A_Journaux_de_chantier_2023_S01.pdf",
+    output_dir="data/output/ESC_test"
+)
+
+print(f"✅ {len(result.tables)} tables extraites")
 ```
 
-## 🔧 Commandes utiles
-- `gmft-cli runs list` : voir les runs précédents
-- `gmft-cli runs show --run-id <id>` : voir les stats / chemins
-- `python backend/gmft_core/scripts/replay_run.py --run-id <id> --from-cache` : rejouer sans relancer l'OCR
-- `gmft-cli profiles validate --file data/profiles/default.yaml` : vérifier un profil
+## 🎯 Extraction SDP (Sous-Détail de Prix)
+
+```python
+from pathlib import Path
+import sys
+sys.path.insert(0, 'src')
+
+from table_extractor.sdp_extractor import SDPExtractor
+import json
+
+# Extraction
+extractor = SDPExtractor()
+page = extractor.extract_page(
+    Path("data/upload/SDP Série D Ind A.pdf"),
+    page_number=0  # Page 1
+)
+
+# Afficher les données
+print(f"📊 {len(page.rows)} lignes extraites")
+
+for row in page.rows[:3]:
+    print(f"  - {row.composantes_du_prix}: {row.montant_part_propre}")
+
+# Récapitulatif
+if page.recap:
+    print(f"\n💰 Récap:")
+    print(f"  TOTAL 5: {page.recap.total_5}")
+    print(f"  K1 ({page.recap.k1_pct}): {page.recap.k1_montant}")
+    print(f"  PRIX HT: {page.recap.prix_vente_ht}")
+
+# Sauvegarder en JSON
+output = extractor.to_dict(page)
+with open("data/output/sdp_page1.json", "w", encoding="utf-8") as f:
+    json.dump(output, f, ensure_ascii=False, indent=2)
+```
+
+## 📊 Formats de sortie
+
+### JSON (tables.json)
+```json
+{
+  "tables": [
+    {
+      "page": 2,
+      "table_index": 0,
+      "raw_data": [
+        ["Col1", "Col2", "Col3"],
+        ["Val1", "Val2", "Val3"]
+      ]
+    }
+  ]
+}
+```
+
+### CSV (page2_table0.csv)
+```csv
+Col1,Col2,Col3
+Val1,Val2,Val3
+```
+
+## 🔧 Options utiles
+
+| Option | Description | Défaut |
+|--------|-------------|--------|
+| `mode` | FAST, ACCURATE, HYBRID | ACCURATE |
+| `pages` | Liste de pages (0-indexed) | Toutes |
+| `dpi` | Résolution rendu | 200 |
+| `ocr_engine` | tesseract, paddleocr, None | None |
+| `save_images` | Sauvegarder images annotées | True |
 
 ## 🐛 Dépannage
-- `GMFT_MODEL_PATH not found` → vérifier le chemin / télécharger le modèle
-- `TesseractNotFoundError` → installer Tesseract ou passer `OCR_ENGINE=none`
-- `No tables detected` → activer `--debug` pour voir les prétraitements, ajuster le profil
-- `Export empty` → vérifier `kv_store_tables.json` puis relancer `gmft-cli export` avec un `table_id` valide
 
-## 📚 Prochaines étapes
-1. Ajouter des tests (voir `docs/TEST_REGISTRY.md`)
-2. Documenter vos profils dans `data/profiles/`
-3. Planifier une API REST ou un front si besoin
+| Problème | Solution |
+|----------|----------|
+| `ModuleNotFoundError: pdfplumber` | `pip install pdfplumber` |
+| `No tables found` | Vérifier que le PDF contient du texte extractible |
+| `Colonnes décalées (SDP)` | Normal, calibration par page |
+| `torch not found` | Installer uniquement si scans: `pip install torch` |
+
+## 📚 Voir aussi
+
+- `docs/PRD.md` - Vision produit
+- `docs/features/extraction_v2_pipeline.md` - Architecture détaillée
+- `tests/goldens/` - Fichiers de référence
